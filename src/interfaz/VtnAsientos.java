@@ -1,32 +1,48 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package interfaz;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JButton;
+import modelo.Boleto;
 
 /**
  *
  * @author chemo
  */
-public class VtnAsientos extends javax.swing.JFrame
+public class VtnAsientos extends javax.swing.JInternalFrame
 {
 
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
     private JButton[][] asientos = new JButton[10][12];
     private boolean[][] ocupados = new boolean[10][12];
 
+    private final int filas = 10;
+    private final int columnas = 45;
+    private final Map<JButton, Boleto> mapaBoletos = new HashMap<>();
+    private final Map<String, Double> precios = new HashMap<>();
     /**
      * Creates new form VtnAsientos
      */
     public VtnAsientos()
     {
         initComponents();
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+        cargarPrecios();
         generarAsientosConPosicion();
     }
 
+    private void cargarPrecios()
+    {
+        precios.put("VIP", 300.0);
+        precios.put("Preferencial", 200.0);
+        precios.put("General", 100.0);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,17 +53,14 @@ public class VtnAsientos extends javax.swing.JFrame
     private void initComponents()
     {
 
-        panelAsientos = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        panelAsientos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jButton2.setText("jButton2");
-        panelAsientos.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 640, -1, -1));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener()
@@ -57,35 +70,40 @@ public class VtnAsientos extends javax.swing.JFrame
                 jButton1ActionPerformed(evt);
             }
         });
-        panelAsientos.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 640, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 420, -1, -1));
 
-        getContentPane().add(panelAsientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 700));
+        jButton2.setText("jButton2");
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 420, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 480));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
     {//GEN-HEADEREND:event_jButton1ActionPerformed
-        for (JButton asiento : asientosSeleccionados)
-        {
-            asiento.setBackground(Color.RED);  // Pintar de rojo los asientos seleccionados
-        }
-
-        //asientosSeleccionados.clear();
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
     private void deseleccionarTodo()
     {
-        for (int i = 0; i < 10; i++)
+        for (JButton btn : asientosSeleccionados)
         {
-            for (int j = 0; j < 12; j++)
+            Boleto boleto = mapaBoletos.get(btn);
+            String categoria = boleto.getCategoria();
+            Color color = switch (categoria)
             {
-                if (!ocupados[i][j])
-                {
-                    asientos[i][j].setBackground(Color.LIGHT_GRAY);
-                }
-            }
+                case "VIP" ->
+                    Color.YELLOW;
+                case "Preferencial" ->
+                    Color.CYAN;
+                default ->
+                    Color.LIGHT_GRAY;
+            };
+            btn.setBackground(color);
         }
+        asientosSeleccionados.clear();
     }
 
     private void generarAsientosConPosicion()
@@ -97,32 +115,59 @@ public class VtnAsientos extends javax.swing.JFrame
         int desplazamientoX = 100;
         int desplazamientoY = 100;
 
-        for (int fila = 0; fila < 10; fila++)
+        double centroX = columnas / 2.0;
+        double escalaBase = 0.25;
+
+        for (int fila = 0; fila < filas; fila++)
         {
-            for (int col = 0; col < 45; col++)
+            for (int col = 0; col < columnas; col++)
             {
                 JButton btn = new JButton();
-                btn.setBackground(Color.LIGHT_GRAY);
+
+                String categoria = (fila < 3) ? "VIP" : (fila < 6) ? "Preferencial" : "General";
+                Color color = switch (categoria)
+                {
+                    case "VIP" ->
+                        Color.YELLOW;
+                    case "Preferencial" ->
+                        Color.CYAN;
+                    default ->
+                        Color.LIGHT_GRAY;
+                };
+
+                btn.setBackground(color);
+                btn.setOpaque(true);
+                btn.setBorderPainted(false);
+
+                double xRel = col - centroX;
+                double curva = Math.pow(xRel, 2) * escalaBase * (1 + fila * 0.1);
 
                 int x = desplazamientoX + col * (ancho + espacio);
-                int y = desplazamientoY + fila * (alto + espacio);
+                int y = desplazamientoY + fila * (alto + espacio) + (int) curva;
 
-                btn.addActionListener(new java.awt.event.ActionListener()
+                String id = "F" + fila + "_C" + col;
+                double precio = precios.get(categoria);
+                Boleto boleto = new Boleto(id, categoria, precio, id);
+
+                btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
+
+                btn.addActionListener(evt ->
                 {
-                    public void actionPerformed(java.awt.event.ActionEvent evt)
+                    if (btn.getBackground() != Color.RED)
                     {
-                        if (btn.getBackground() == Color.LIGHT_GRAY)
+                        if (btn.getBackground() == Color.GREEN)
+                        {
+                            btn.setBackground(color);
+                            asientosSeleccionados.remove(btn);
+                        } else
                         {
                             btn.setBackground(Color.GREEN);
                             asientosSeleccionados.add(btn);
-                        } else if (btn.getBackground() == Color.GREEN)
-                        {
-                            btn.setBackground(Color.LIGHT_GRAY);
-                            asientosSeleccionados.remove(btn);
                         }
                     }
                 });
 
+                mapaBoletos.put(btn, boleto);
                 panelAsientos.add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, ancho, alto));
             }
         }
@@ -131,54 +176,9 @@ public class VtnAsientos extends javax.swing.JFrame
         panelAsientos.repaint();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[])
-    {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex)
-        {
-            java.util.logging.Logger.getLogger(VtnAsientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex)
-        {
-            java.util.logging.Logger.getLogger(VtnAsientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex)
-        {
-            java.util.logging.Logger.getLogger(VtnAsientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
-            java.util.logging.Logger.getLogger(VtnAsientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new VtnAsientos().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JPanel panelAsientos;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
