@@ -4,10 +4,13 @@
  */
 package interfaz;
 
+import cjb.ci.CtrlInterfaz;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import modelo.Boleto;
 
 /**
@@ -16,15 +19,16 @@ import modelo.Boleto;
  */
 public class VtnAsientos extends javax.swing.JInternalFrame
 {
-
+    
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
     private JButton[][] asientos = new JButton[10][12];
     private boolean[][] ocupados = new boolean[10][12];
-
+    
     private final int filas = 10;
     private final int columnas = 45;
     private final Map<JButton, Boleto> mapaBoletos = new HashMap<>();
     private final Map<String, Double> precios = new HashMap<>();
+
     /**
      * Creates new form VtnAsientos
      */
@@ -36,13 +40,14 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         cargarPrecios();
         generarAsientosConPosicion();
     }
-
+    
     private void cargarPrecios()
     {
         precios.put("VIP", 300.0);
         precios.put("Preferencial", 200.0);
         precios.put("General", 100.0);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -53,38 +58,101 @@ public class VtnAsientos extends javax.swing.JInternalFrame
     private void initComponents()
     {
 
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        panelAsientos = new javax.swing.JPanel();
+        aceptar = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
+        asientosJT = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        totalJT = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelAsientos.setBackground(new java.awt.Color(255, 255, 255));
+        panelAsientos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener()
+        aceptar.setBackground(new java.awt.Color(102, 255, 102));
+        aceptar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        aceptar.setForeground(new java.awt.Color(255, 255, 255));
+        aceptar.setText("ACEPTAR");
+        aceptar.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jButton1ActionPerformed(evt);
+                aceptarActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 420, -1, -1));
+        panelAsientos.add(aceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 500, -1, -1));
 
-        jButton2.setText("jButton2");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 420, -1, -1));
+        cancelar.setBackground(new java.awt.Color(255, 51, 51));
+        cancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cancelar.setForeground(new java.awt.Color(255, 255, 255));
+        cancelar.setText("CANCELAR");
+        cancelar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                cancelarActionPerformed(evt);
+            }
+        });
+        panelAsientos.add(cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 500, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 480));
+        asientosJT.setEditable(false);
+        panelAsientos.add(asientosJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 380, 250, -1));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel1.setText("Asientos:");
+        panelAsientos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 360, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Total:");
+        panelAsientos.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 410, -1, -1));
+
+        totalJT.setEditable(false);
+        totalJT.setText("$0.00");
+        panelAsientos.add(totalJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 430, 250, -1));
+
+        getContentPane().add(panelAsientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
-    {//GEN-HEADEREND:event_jButton1ActionPerformed
+    private void aceptarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_aceptarActionPerformed
+    {//GEN-HEADEREND:event_aceptarActionPerformed
+        if (asientosSeleccionados.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "No hay asientos seleccionados.");
+            return;
+        }
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+        double total = 0;
+        StringBuilder detalle = new StringBuilder();
+        
+        for (JButton btn : asientosSeleccionados)
+        {
+            Boleto boleto = mapaBoletos.get(btn);
+            total += boleto.getPrecio();
+            detalle.append(boleto.getNumeroAsiento())
+                    .append(" (").append(boleto.getCategoria()).append(") - $")
+                    .append(boleto.getPrecio()).append("\n");
+            btn.setBackground(Color.RED);            
+        }
+        
+        JOptionPane.showMessageDialog(this,
+                "Compra realizada\n\n" + detalle + "\nTotal: $" + total,
+                "Compra exitosa",
+                JOptionPane.INFORMATION_MESSAGE);
+        
+        CtrlInterfaz.limpia(asientosJT, totalJT);
+        asientosSeleccionados.clear();
+    }//GEN-LAST:event_aceptarActionPerformed
 
+    private void cancelarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_cancelarActionPerformed
+    {//GEN-HEADEREND:event_cancelarActionPerformed
+        deseleccionarTodo();
+        CtrlInterfaz.limpia(asientosJT, totalJT);
+    }//GEN-LAST:event_cancelarActionPerformed
     
     private void deseleccionarTodo()
     {
@@ -95,62 +163,67 @@ public class VtnAsientos extends javax.swing.JInternalFrame
             Color color = switch (categoria)
             {
                 case "VIP" ->
-                    Color.YELLOW;
+                    Color.LIGHT_GRAY;
                 case "Preferencial" ->
                     Color.CYAN;
                 default ->
-                    Color.LIGHT_GRAY;
+                    Color.YELLOW;
             };
+            
             btn.setBackground(color);
         }
         asientosSeleccionados.clear();
     }
-
+    
     private void generarAsientosConPosicion()
     {
         int ancho = 20;
         int alto = 20;
         int espacio = 2;
-
-        int desplazamientoX = 100;
-        int desplazamientoY = 100;
-
+        
+        int desplazamientoX = 140;
+        int desplazamientoY = 10;
+        
         double centroX = columnas / 2.0;
         double escalaBase = 0.25;
-
+        
         for (int fila = 0; fila < filas; fila++)
         {
             for (int col = 0; col < columnas; col++)
             {
                 JButton btn = new JButton();
-
-                String categoria = (fila < 3) ? "VIP" : (fila < 6) ? "Preferencial" : "General";
+                
+                String categoria = (fila < 3) ? "General" : (fila < 6) ? "Preferencial" : "VIP";
+                
                 Color color = switch (categoria)
                 {
                     case "VIP" ->
-                        Color.YELLOW;
+                        Color.LIGHT_GRAY;
                     case "Preferencial" ->
                         Color.CYAN;
                     default ->
-                        Color.LIGHT_GRAY;
+                        Color.YELLOW;
                 };
-
+                
                 btn.setBackground(color);
                 btn.setOpaque(true);
                 btn.setBorderPainted(false);
-
+                
+                String id = "F" + fila + "_C" + col;
+                btn.setText(id);
+                btn.setFont(new Font("Arial", Font.PLAIN, 8));
+                
                 double xRel = col - centroX;
                 double curva = Math.pow(xRel, 2) * escalaBase * (1 + fila * 0.1);
-
+                
                 int x = desplazamientoX + col * (ancho + espacio);
                 int y = desplazamientoY + fila * (alto + espacio) + (int) curva;
-
-                String id = "F" + fila + "_C" + col;
+                
                 double precio = precios.get(categoria);
                 Boleto boleto = new Boleto(id, categoria, precio, id);
-
+                
                 btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
-
+                
                 btn.addActionListener(evt ->
                 {
                     if (btn.getBackground() != Color.RED)
@@ -164,21 +237,48 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                             btn.setBackground(Color.GREEN);
                             asientosSeleccionados.add(btn);
                         }
+                        actualizarCamposDeResumen();
                     }
                 });
-
+                
                 mapaBoletos.put(btn, boleto);
                 panelAsientos.add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, ancho, alto));
             }
         }
-
+        
         panelAsientos.revalidate();
         panelAsientos.repaint();
     }
+    
+    private void actualizarCamposDeResumen()
+    {
+        StringBuilder listaAsientos = new StringBuilder();
+        double total = 0;
+        
+        for (JButton btn : asientosSeleccionados)
+        {
+            Boleto boleto = mapaBoletos.get(btn);
+            listaAsientos.append(boleto.getNumeroAsiento()).append(", ");
+            total += boleto.getPrecio();
+        }
+        
+        if (listaAsientos.length() > 0)
+        {
+            listaAsientos.setLength(listaAsientos.length() - 2);            
+        }
+        
+        asientosJT.setText(listaAsientos.toString());
+        totalJT.setText("$" + total);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton aceptar;
+    private javax.swing.JTextField asientosJT;
+    private javax.swing.JButton cancelar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel panelAsientos;
+    private javax.swing.JTextField totalJT;
     // End of variables declaration//GEN-END:variables
 }

@@ -94,6 +94,13 @@ public class VtnPrincipal extends javax.swing.JFrame
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boleto.png"))); // NOI18N
         jMenu1.setText("Boletos");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jMenu1MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu1);
 
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/estadio.png"))); // NOI18N
@@ -113,6 +120,13 @@ public class VtnPrincipal extends javax.swing.JFrame
         VtnInicio inicio = new VtnInicio();
         panelControl.add(inicio).setVisible(true);
     }//GEN-LAST:event_formWindowOpened
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu1MouseClicked
+    {//GEN-HEADEREND:event_jMenu1MouseClicked
+        panelControl.removeAll();
+        VtnAsientos asientos = new VtnAsientos();
+        panelControl.add(asientos).setVisible(true);
+    }//GEN-LAST:event_jMenu1MouseClicked
 
     private void deseleccionarTodo()
     {
@@ -134,75 +148,7 @@ public class VtnPrincipal extends javax.swing.JFrame
         asientosSeleccionados.clear();
     }
 
-//    private void generarAsientosConPosicion()
-//    {
-//        int ancho = 20;
-//        int alto = 20;
-//        int espacio = 2;
-//
-//        int desplazamientoX = 100;
-//        int desplazamientoY = 100;
-//
-//        double centroX = columnas / 2.0;
-//        double escalaBase = 0.25;
-//
-//        for (int fila = 0; fila < filas; fila++)
-//        {
-//            for (int col = 0; col < columnas; col++)
-//            {
-//                JButton btn = new JButton();
-//
-//                String categoria = (fila < 3) ? "VIP" : (fila < 6) ? "Preferencial" : "General";
-//                Color color = switch (categoria)
-//                {
-//                    case "VIP" ->
-//                        Color.YELLOW;
-//                    case "Preferencial" ->
-//                        Color.CYAN;
-//                    default ->
-//                        Color.LIGHT_GRAY;
-//                };
-//
-//                btn.setBackground(color);
-//                btn.setOpaque(true);
-//                btn.setBorderPainted(false);
-//
-//                double xRel = col - centroX;
-//                double curva = Math.pow(xRel, 2) * escalaBase * (1 + fila * 0.1);
-//
-//                int x = desplazamientoX + col * (ancho + espacio);
-//                int y = desplazamientoY + fila * (alto + espacio) + (int) curva;
-//
-//                String id = "F" + fila + "_C" + col;
-//                double precio = precios.get(categoria);
-//                Boleto boleto = new Boleto(id, categoria, precio, id);
-//
-//                btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
-//
-//                btn.addActionListener(evt ->
-//                {
-//                    if (btn.getBackground() != Color.RED)
-//                    {
-//                        if (btn.getBackground() == Color.GREEN)
-//                        {
-//                            btn.setBackground(color);
-//                            asientosSeleccionados.remove(btn);
-//                        } else
-//                        {
-//                            btn.setBackground(Color.GREEN);
-//                            asientosSeleccionados.add(btn);
-//                        }
-//                    }
-//                });
-//
-//                mapaBoletos.put(btn, boleto);
-//                panelAsientos.add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, ancho, alto));
-//            }
-//        }
-//
-//        panelAsientos.revalidate();
-//        panelAsientos.repaint();
-//    }
+
 
     /**
      * @param args the command line arguments
