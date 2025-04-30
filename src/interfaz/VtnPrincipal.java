@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import modelo.Boleto;
+import modelo.*;
 
 /**
  *
@@ -18,6 +19,9 @@ import modelo.Boleto;
 public class VtnPrincipal extends javax.swing.JFrame
 {
 
+    //Lista boletos
+    private ListarBoletos nboleto = new ListarBoletos();
+    
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
     private JButton[][] asientos = new JButton[10][12];
     private boolean[][] ocupados = new boolean[10][12];
@@ -34,6 +38,7 @@ public class VtnPrincipal extends javax.swing.JFrame
     {
         initComponents();
         cargarPrecios();
+        cargarCategorias();
         //generarAsientosConPosicion();
     }
 
@@ -42,6 +47,25 @@ public class VtnPrincipal extends javax.swing.JFrame
         precios.put("VIP", 300.0);
         precios.put("Preferencial", 200.0);
         precios.put("General", 100.0);
+    }
+
+    
+    private void cargarCategorias(){
+        NodoCateg cat = new NodoCateg("VIP");
+        System.out.println("Se creó categoría: " + cat.getCategoria());
+        NodoCateg cat1 = new NodoCateg("Preferencial");
+        System.out.println("Se creó categoría: " + cat1.getCategoria());
+        NodoCateg cat2 = new NodoCateg("General");
+        System.out.println("Se creó categoría: " + cat2.getCategoria());
+        
+        nboleto.agregarCategoria(cat);
+        nboleto.agregarCategoria(cat1);
+        nboleto.agregarCategoria(cat2);
+        /*
+        operaciones.mostrarCategoria("VIP");
+        operaciones.mostrarCategoria("Preferencial");
+        operaciones.mostrarCategoria("General");
+       */
     }
 
     /**
@@ -124,7 +148,7 @@ public class VtnPrincipal extends javax.swing.JFrame
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu1MouseClicked
     {//GEN-HEADEREND:event_jMenu1MouseClicked
         panelControl.removeAll();
-        VtnAsientos asientos = new VtnAsientos();
+         VtnAsientos asientos = new VtnAsientos(nboleto);
         panelControl.add(asientos).setVisible(true);
     }//GEN-LAST:event_jMenu1MouseClicked
 

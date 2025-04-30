@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import modelo.Boleto;
+import modelo.*;
 
 /**
  *
@@ -19,10 +19,12 @@ import modelo.Boleto;
  */
 public class VtnAsientos extends javax.swing.JInternalFrame
 {
+    //Lista boletos
+    private ListarBoletos nboleto;
     
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
-    private JButton[][] asientos = new JButton[10][12];
-    private boolean[][] ocupados = new boolean[10][12];
+    private JButton[][] asientos = new JButton[10][45];
+    private boolean[][] ocupados = new boolean[10][45];
     
     private final int filas = 10;
     private final int columnas = 45;
@@ -31,13 +33,16 @@ public class VtnAsientos extends javax.swing.JInternalFrame
 
     /**
      * Creates new form VtnAsientos
+     * @param nboleto
      */
-    public VtnAsientos()
+    public VtnAsientos(ListarBoletos nboleto)
     {
+        this.nboleto = nboleto;
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         cargarPrecios();
+        //Categorias en las listas ligadas
         generarAsientosConPosicion();
     }
     
@@ -47,6 +52,7 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         precios.put("Preferencial", 200.0);
         precios.put("General", 100.0);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -132,6 +138,7 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         for (JButton btn : asientosSeleccionados)
         {
             Boleto boleto = mapaBoletos.get(btn);
+            nboleto.cambiarEstadoBoleto(boleto);
             total += boleto.getPrecio();
             detalle.append(boleto.getNumeroAsiento())
                     .append(" (").append(boleto.getCategoria()).append(") - $")
@@ -221,6 +228,9 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 
                 double precio = precios.get(categoria);
                 Boleto boleto = new Boleto(id, categoria, precio, id);
+                nboleto.agregarBoleto(boleto);
+                //System.out.println(boleto);
+                //nboleto.MostrarBoletos();
                 
                 btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
                 
