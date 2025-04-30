@@ -47,6 +47,7 @@ public class Boleto
     {
         this.vendido = true;
     }
+    
 
     @Override
     public String toString()
