@@ -10,25 +10,32 @@ import java.util.*;
  *
  * @author URIEL
  */
-public class ListarBoletos {
+public class ListarBoletos
+{
 
     private NodoCateg primera;
 
-    public NodoCateg getPrimero() {
+    public NodoCateg getPrimero()
+    {
         return primera;
     }
 
-    public void setPrimero(NodoCateg primera) {
+    public void setPrimero(NodoCateg primera)
+    {
         this.primera = primera;
     }
 
-    public void agregarCategoria(NodoCateg nueva) {
-        if (primera == null) {
+    public void agregarCategoria(NodoCateg nueva)
+    {
+        if (primera == null)
+        {
             primera = nueva;
             System.out.println("Se agrego 1ER cat");
-        } else {
+        } else
+        {
             NodoCateg auxCateg = primera;
-            while (auxCateg.getAdelante() != null) {
+            while (auxCateg.getAdelante() != null)
+            {
                 auxCateg = auxCateg.getAdelante();
             }
             auxCateg.setAdelante(nueva);
@@ -36,9 +43,10 @@ public class ListarBoletos {
         }
     }
 
-    public void cambiarEstadoBoleto(Boleto boleto) {
-
-        if (primera == null) {
+    public void cambiarEstadoBoleto(Boleto boleto)
+    {
+        if (primera == null)
+        {
             System.out.println("Categoria vacia");
             return;
         }
@@ -46,23 +54,31 @@ public class ListarBoletos {
         NodoCateg aux = primera;
         boolean encontrado = false;
 
-        while (aux.getAdelante() != null) {
+        while (aux != null)
+        {
             NodoBoleto aux1 = aux.getPrimerboleto();
-            while (aux1.getSiguiente() != null) {
-                if (aux1.getBoleto().getId().equals(boleto.getId())) {
+            while (aux1 != null)
+            {
+                if (aux1.getBoleto().getId().equals(boleto.getId()))
+                {
                     aux1.getBoleto().marcarComoVendido();
+                    System.out.println("Boleto marcado como vendido: " + boleto.getId());
                     encontrado = true;
-                    break; // salimos del ciclo de boletos
+                    break;
                 }
                 aux1 = aux1.getSiguiente();
             }
-            if (encontrado) {
-                break; // salimos del ciclo de categorías también
+            if (encontrado)
+            {
+                break;
             }
             aux = aux.getAdelante();
         }
-        System.out.println("No se encontro el boleto");
 
+        if (!encontrado)
+        {
+            System.out.println("No se encontró el boleto: " + boleto.getId());
+        }
     }
 
     //Posible utilizacion
@@ -78,68 +94,82 @@ public class ListarBoletos {
         System.out.println("Fallo");
         return null;
     }*/
-    
-    public void agregarBoleto(Boleto boleto) {
-    if (primera == null) {
-        System.out.println("Categoria vacia");
-        return;
-    }
-
-    NodoCateg actual = primera;
-    boolean encontrado = false;
-
-    while (actual != null) {
-        if (actual.getCategoria().equalsIgnoreCase(boleto.getCategoria())) {
-            NodoBoleto nuevo = new NodoBoleto(boleto);
-
-            if (actual.getPrimerboleto() == null) {
-                actual.setPrimerboleto(nuevo);
-            } else {
-                NodoBoleto aux = actual.getPrimerboleto();
-                while (aux.getSiguiente() != null) {
-                    aux = aux.getSiguiente();
-                }
-                aux.setSiguiente(nuevo);
-            }
-
-            System.out.println("Boleto agregado a la categoría: " + actual.getCategoria());
-            encontrado = true;
-            break;
+    public void agregarBoleto(Boleto boleto)
+    {
+        if (primera == null)
+        {
+            System.out.println("Categoria vacia");
+            return;
         }
-        actual = actual.getAdelante();
+
+        NodoCateg actual = primera;
+        boolean encontrado = false;
+
+        while (actual != null)
+        {
+            if (actual.getCategoria().equalsIgnoreCase(boleto.getCategoria()))
+            {
+                NodoBoleto nuevo = new NodoBoleto(boleto);
+
+                if (actual.getPrimerboleto() == null)
+                {
+                    actual.setPrimerboleto(nuevo);
+                } else
+                {
+                    NodoBoleto aux = actual.getPrimerboleto();
+                    while (aux.getSiguiente() != null)
+                    {
+                        aux = aux.getSiguiente();
+                    }
+                    aux.setSiguiente(nuevo);
+                }
+
+                System.out.println("Boleto agregado a la categoría: " + actual.getCategoria());
+                encontrado = true;
+                System.out.println("Boleto agregado → ID: " + boleto.getId() + ", categoría: " + boleto.getCategoria());
+
+                break;
+            }
+            actual = actual.getAdelante();
+        }
+
+        if (!encontrado)
+        {
+            System.out.println("No se encontró la categoría para el boleto: " + boleto.getCategoria());
+        }
     }
 
-    if (!encontrado) {
-        System.out.println("No se encontró la categoría para el boleto: " + boleto.getCategoria());
-    }
-}
-
-
-    public List<Boleto> obtenerTodosLosBoletos() {
-        List<Boleto> boletos = new ArrayList<>();  // Crear una lista para almacenar los boletos
+    public List<Boleto> obtenerTodosLosBoletos()
+    {
+        List<Boleto> boletos = new ArrayList<>();
 
         NodoCateg aux = primera;
 
-        while (aux != null) {
+        while (aux != null)
+        {
 
             NodoBoleto aux1 = aux.getPrimerboleto();
 
-            while (aux1 != null) {
-                boletos.add(aux1.getBoleto());  // Agregar el boleto a la lista
-                aux1 = aux1.getSiguiente();     // Avanzar al siguiente nodo   
+            while (aux1 != null)
+            {
+                boletos.add(aux1.getBoleto());
+                aux1 = aux1.getSiguiente();
             }
             aux = aux.getAdelante();
         }
 
-        return boletos;  // Retornar la lista de boletos
+        return boletos;
     }
 
-    public void MostrarBoletos() {
+    public void MostrarBoletos()
+    {
         NodoCateg CategoriaActual = primera;
-        while (CategoriaActual.getAdelante() != null) {
+        while (CategoriaActual.getAdelante() != null)
+        {
             System.out.println("Categoria:" + CategoriaActual.getCategoria());
             NodoBoleto BoletoActual = CategoriaActual.getPrimerboleto();
-            while (BoletoActual != null) {
+            while (BoletoActual != null)
+            {
                 Boleto b = BoletoActual.getBoleto();
                 System.out.println("ID:" + b.getId() + " Categoria:" + b.getCategoria() + " Precio:" + b.getPrecio() + " NoAsiento:" + b.getCategoria());
             }

@@ -1,0 +1,10 @@
+Boletos Vendidos - Fecha: 2025-05-07T15:48:41.477911700
+--------------------------------------------------------
+ID: F9_C16, Categoría: VIP, Precio: $300.0, Asiento: F9_C16
+ID: F9_C17, Categoría: VIP, Precio: $300.0, Asiento: F9_C17
+ID: F9_C18, Categoría: VIP, Precio: $300.0, Asiento: F9_C18
+ID: F9_C22, Categoría: VIP, Precio: $300.0, Asiento: F9_C22
+ID: F9_C23, Categoría: VIP, Precio: $300.0, Asiento: F9_C23
+ID: F9_C24, Categoría: VIP, Precio: $300.0, Asiento: F9_C24
+ID: F3_C19, Categoría: Preferencial, Precio: $200.0, Asiento: F3_C19
+ID: F6_C19, Categoría: VIP, Precio: $300.0, Asiento: F6_C19

@@ -5,10 +5,12 @@
 package interfaz;
 
 import cjb.ci.CtrlInterfaz;
+import estructuras.ColaBoletos;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import modelo.*;
@@ -19,20 +21,23 @@ import modelo.*;
  */
 public class VtnAsientos extends javax.swing.JInternalFrame
 {
-    //Lista boletos
+
     private ListarBoletos nboleto;
-    
+
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
     private JButton[][] asientos = new JButton[10][45];
     private boolean[][] ocupados = new boolean[10][45];
-    
+
     private final int filas = 10;
     private final int columnas = 45;
     private final Map<JButton, Boleto> mapaBoletos = new HashMap<>();
     private final Map<String, Double> precios = new HashMap<>();
 
+    private ColaBoletos colaBoletos = new ColaBoletos();
+
     /**
      * Creates new form VtnAsientos
+     *
      * @param nboleto
      */
     public VtnAsientos(ListarBoletos nboleto)
@@ -45,14 +50,13 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         //Categorias en las listas ligadas
         generarAsientosConPosicion();
     }
-    
+
     private void cargarPrecios()
     {
         precios.put("VIP", 300.0);
         precios.put("Preferencial", 200.0);
         precios.put("General", 100.0);
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -131,10 +135,10 @@ public class VtnAsientos extends javax.swing.JInternalFrame
             JOptionPane.showMessageDialog(this, "No hay asientos seleccionados.");
             return;
         }
-        
+
         double total = 0;
         StringBuilder detalle = new StringBuilder();
-        
+
         for (JButton btn : asientosSeleccionados)
         {
             Boleto boleto = mapaBoletos.get(btn);
@@ -143,14 +147,17 @@ public class VtnAsientos extends javax.swing.JInternalFrame
             detalle.append(boleto.getNumeroAsiento())
                     .append(" (").append(boleto.getCategoria()).append(") - $")
                     .append(boleto.getPrecio()).append("\n");
-            btn.setBackground(Color.RED);            
+            btn.setBackground(Color.RED);
+            colaBoletos.encolar(boleto);
         }
-        
+
         JOptionPane.showMessageDialog(this,
                 "Compra realizada\n\n" + detalle + "\nTotal: $" + total,
                 "Compra exitosa",
                 JOptionPane.INFORMATION_MESSAGE);
-        
+
+        generarArchivoBoletosVendidos();
+
         CtrlInterfaz.limpia(asientosJT, totalJT);
         asientosSeleccionados.clear();
     }//GEN-LAST:event_aceptarActionPerformed
@@ -160,7 +167,33 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         deseleccionarTodo();
         CtrlInterfaz.limpia(asientosJT, totalJT);
     }//GEN-LAST:event_cancelarActionPerformed
-    
+
+    private void generarArchivoBoletosVendidos()
+    {
+        Queue<Boleto> vendidos = colaBoletos.obtenerBoletosVendidos();
+
+        try
+        {
+            String nombreArchivo = "boletos_vendidos_" + java.time.LocalDate.now() + ".txt";
+            java.io.PrintWriter writer = new java.io.PrintWriter(nombreArchivo, "UTF-8");
+
+            writer.println("Boletos Vendidos - Fecha: " + java.time.LocalDateTime.now());
+            writer.println("--------------------------------------------------------");
+
+            for (Boleto b : vendidos)
+            {
+                writer.println("ID: " + b.getId() + ", Categoría: " + b.getCategoria()
+                        + ", Precio: $" + b.getPrecio() + ", Asiento: " + b.getNumeroAsiento());
+            }
+
+            writer.close();
+            System.out.println("Archivo generado: " + nombreArchivo);
+        } catch (Exception e)
+        {
+            System.err.println("Error al generar el archivo: " + e.getMessage());
+        }
+    }
+
     private void deseleccionarTodo()
     {
         for (JButton btn : asientosSeleccionados)
@@ -176,32 +209,32 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 default ->
                     Color.YELLOW;
             };
-            
+
             btn.setBackground(color);
         }
         asientosSeleccionados.clear();
     }
-    
+
     private void generarAsientosConPosicion()
     {
         int ancho = 20;
         int alto = 20;
         int espacio = 2;
-        
+
         int desplazamientoX = 140;
         int desplazamientoY = 10;
-        
+
         double centroX = columnas / 2.0;
         double escalaBase = 0.25;
-        
+
         for (int fila = 0; fila < filas; fila++)
         {
             for (int col = 0; col < columnas; col++)
             {
                 JButton btn = new JButton();
-                
+
                 String categoria = (fila < 3) ? "General" : (fila < 6) ? "Preferencial" : "VIP";
-                
+
                 Color color = switch (categoria)
                 {
                     case "VIP" ->
@@ -211,29 +244,29 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                     default ->
                         Color.YELLOW;
                 };
-                
+
                 btn.setBackground(color);
                 btn.setOpaque(true);
                 btn.setBorderPainted(false);
-                
+
                 String id = "F" + fila + "_C" + col;
                 btn.setText(id);
                 btn.setFont(new Font("Arial", Font.PLAIN, 8));
-                
+
                 double xRel = col - centroX;
                 double curva = Math.pow(xRel, 2) * escalaBase * (1 + fila * 0.1);
-                
+
                 int x = desplazamientoX + col * (ancho + espacio);
                 int y = desplazamientoY + fila * (alto + espacio) + (int) curva;
-                
+
                 double precio = precios.get(categoria);
                 Boleto boleto = new Boleto(id, categoria, precio, id);
                 nboleto.agregarBoleto(boleto);
                 //System.out.println(boleto);
                 //nboleto.MostrarBoletos();
-                
+
                 btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
-                
+
                 btn.addActionListener(evt ->
                 {
                     if (btn.getBackground() != Color.RED)
@@ -250,33 +283,33 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                         actualizarCamposDeResumen();
                     }
                 });
-                
+
                 mapaBoletos.put(btn, boleto);
                 panelAsientos.add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, ancho, alto));
             }
         }
-        
+
         panelAsientos.revalidate();
         panelAsientos.repaint();
     }
-    
+
     private void actualizarCamposDeResumen()
     {
         StringBuilder listaAsientos = new StringBuilder();
         double total = 0;
-        
+
         for (JButton btn : asientosSeleccionados)
         {
             Boleto boleto = mapaBoletos.get(btn);
             listaAsientos.append(boleto.getNumeroAsiento()).append(", ");
             total += boleto.getPrecio();
         }
-        
+
         if (listaAsientos.length() > 0)
         {
-            listaAsientos.setLength(listaAsientos.length() - 2);            
+            listaAsientos.setLength(listaAsientos.length() - 2);
         }
-        
+
         asientosJT.setText(listaAsientos.toString());
         totalJT.setText("$" + total);
     }
