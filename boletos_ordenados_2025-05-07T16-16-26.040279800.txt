@@ -1,0 +1,11 @@
+Boletos vendidos ordenados por prioridad:
+-------------------------------------------------
+ID: F9_C22 | VIP | $300.0
+ID: F9_C21 | VIP | $300.0
+ID: F9_C20 | VIP | $300.0
+ID: F3_C21 | Preferencial | $200.0
+ID: F3_C20 | Preferencial | $200.0
+ID: F3_C19 | Preferencial | $200.0
+ID: F0_C21 | General | $100.0
+ID: F0_C20 | General | $100.0
+ID: F0_C19 | General | $100.0

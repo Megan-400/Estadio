@@ -6,6 +6,7 @@ package interfaz;
 
 import cjb.ci.CtrlInterfaz;
 import estructuras.ColaBoletos;
+import estructuras.ListaDobleOrdenada;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class VtnAsientos extends javax.swing.JInternalFrame
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
     private JButton[][] asientos = new JButton[10][45];
     private boolean[][] ocupados = new boolean[10][45];
+    private ListaDobleOrdenada listaOrdenada = new ListaDobleOrdenada();
 
     private final int filas = 10;
     private final int columnas = 45;
@@ -47,7 +49,6 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         cargarPrecios();
-        //Categorias en las listas ligadas
         generarAsientosConPosicion();
     }
 
@@ -142,13 +143,18 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         for (JButton btn : asientosSeleccionados)
         {
             Boleto boleto = mapaBoletos.get(btn);
-            nboleto.cambiarEstadoBoleto(boleto);
+
+            nboleto.cambiarEstadoBoleto(boleto);        
+            colaBoletos.encolar(boleto);                
+            listaOrdenada.insertarOrdenado(boleto);     
+
             total += boleto.getPrecio();
+
             detalle.append(boleto.getNumeroAsiento())
                     .append(" (").append(boleto.getCategoria()).append(") - $")
                     .append(boleto.getPrecio()).append("\n");
+
             btn.setBackground(Color.RED);
-            colaBoletos.encolar(boleto);
         }
 
         JOptionPane.showMessageDialog(this,
@@ -156,7 +162,8 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 "Compra exitosa",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        generarArchivoBoletosVendidos();
+        generarArchivoBoletosVendidos();        
+        listaOrdenada.generarReporteTXT();      
 
         CtrlInterfaz.limpia(asientosJT, totalJT);
         asientosSeleccionados.clear();
@@ -262,8 +269,6 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 double precio = precios.get(categoria);
                 Boleto boleto = new Boleto(id, categoria, precio, id);
                 nboleto.agregarBoleto(boleto);
-                //System.out.println(boleto);
-                //nboleto.MostrarBoletos();
 
                 btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
 
