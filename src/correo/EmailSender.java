@@ -20,8 +20,8 @@ import javax.mail.util.ByteArrayDataSource;
 public class EmailSender
 {
 
-    private static final String EMAIL = "albertochivocordobaestadio@gmail.com";
-    private static final String PASSWORD = "ilbq cvat cbte mkin";
+    private static final String EMAIL = "";
+    private static final String PASSWORD = "";
 
     public static void enviarCorreo(String destinatario, String asunto, String mensajeHTML)
     {
