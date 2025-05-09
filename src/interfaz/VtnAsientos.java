@@ -4,12 +4,17 @@
  */
 package interfaz;
 
+import archivos.ManipulacionArchivos;
 import cjb.ci.CtrlInterfaz;
+import correo.EmailSender;
 import estructuras.ColaBoletos;
 import estructuras.ListaDobleOrdenada;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import javax.swing.JButton;
@@ -76,6 +81,8 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         totalJT = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        correoJT = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -110,19 +117,23 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         panelAsientos.add(cancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 500, -1, -1));
 
         asientosJT.setEditable(false);
-        panelAsientos.add(asientosJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 380, 250, -1));
+        panelAsientos.add(asientosJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 360, 250, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Asientos:");
-        panelAsientos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 360, -1, -1));
+        panelAsientos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Total:");
-        panelAsientos.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 410, -1, -1));
+        panelAsientos.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 390, -1, -1));
 
         totalJT.setEditable(false);
         totalJT.setText("$0.00");
-        panelAsientos.add(totalJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 430, 250, -1));
+        panelAsientos.add(totalJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 410, 250, -1));
+
+        jLabel3.setText("Correo:");
+        panelAsientos.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 440, -1, -1));
+        panelAsientos.add(correoJT, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 460, 250, -1));
 
         getContentPane().add(panelAsientos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 560));
 
@@ -139,14 +150,16 @@ public class VtnAsientos extends javax.swing.JInternalFrame
 
         double total = 0;
         StringBuilder detalle = new StringBuilder();
+        List<Boleto> boletosVendidos = new ArrayList<>();
 
         for (JButton btn : asientosSeleccionados)
         {
             Boleto boleto = mapaBoletos.get(btn);
 
-            nboleto.cambiarEstadoBoleto(boleto);        
-            colaBoletos.encolar(boleto);                
-            listaOrdenada.insertarOrdenado(boleto);     
+            nboleto.cambiarEstadoBoleto(boleto);
+            colaBoletos.encolar(boleto);
+            listaOrdenada.insertarOrdenado(boleto);
+            boletosVendidos.add(boleto);
 
             total += boleto.getPrecio();
 
@@ -161,12 +174,72 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 "Compra realizada\n\n" + detalle + "\nTotal: $" + total,
                 "Compra exitosa",
                 JOptionPane.INFORMATION_MESSAGE);
+        System.out.println(new File("imagenes/UAEMEX.png").getAbsolutePath());
 
-        generarArchivoBoletosVendidos();        
-        listaOrdenada.generarReporteTXT();      
+        String correoDestino = correoJT.getText().trim();
 
-        CtrlInterfaz.limpia(asientosJT, totalJT);
+        if (!correoDestino.isEmpty() && correoDestino.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
+        {
+            StringBuilder mensajeHTML = new StringBuilder("""
+                <html>
+                  <body style='font-family: Arial, sans-serif;'>
+                    <div style='text-align: center; margin-bottom: 10px;'>
+                      <img src='cid:logoUAEMex' alt='UAEMex'
+                           style='max-width: 120px; height: auto; display: block; margin: 0 auto;'>
+                    </div>
+                    <h2 style='color: green; text-align: center;'>¡Gracias por tu compra en el Estadio Universitario Alberto "Chivo" Córdoba!</h2>
+                    <p style='color: #880e4f;'>Este es el resumen de tus boletos:</p>
+                    <table style='border-collapse: collapse; width: 100%;'>
+                      <tr style='background-color: #f2f2f2;'>
+                        <th style='border: 1px solid #ddd; padding: 8px;'>Asiento</th>
+                        <th style='border: 1px solid #ddd; padding: 8px;'>Categoría</th>
+                        <th style='border: 1px solid #ddd; padding: 8px;'>Precio</th>
+                      </tr>
+                """);
+
+            for (JButton btn : asientosSeleccionados)
+            {
+                Boleto b = mapaBoletos.get(btn);
+                mensajeHTML.append(String.format("""
+                      <tr>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>%s</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>%s</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>$%.2f</td>
+                      </tr>
+                    """, b.getNumeroAsiento(), b.getCategoria(), b.getPrecio()));
+            }
+
+            mensajeHTML.append(String.format("""
+                    </table>
+                    <p style='font-weight: bold;'>Total: $%.2f</p>
+                    <p>Disfruta del evento.<br>Gracias por tu preferencia.</p>
+                    <hr>
+                    <small style='color: #777;'>Este correo fue generado automáticamente. No respondas a este mensaje.</small>
+                  </body>
+                </html>
+                """, total));
+
+            EmailSender.enviarCorreo(correoDestino, "🎟 Confirmación de compra de boletos", mensajeHTML.toString());
+
+            EmailSender.enviarCorreo(correoDestino, "Confirmación de compra de boletos", correoDestino.toString());
+        } else
+        {
+            JOptionPane.showMessageDialog(this, "Correo no válido o vacío. No se envió confirmación por email.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+
+        generarArchivoBoletosVendidos();
+        listaOrdenada.generarReporteTXT();
+
+        CtrlInterfaz.limpia(asientosJT, totalJT,correoJT);
         asientosSeleccionados.clear();
+
+        List<Boleto> vendidosPrevios = (List<Boleto>) ManipulacionArchivos.carga(null, "boletosVendidos.dat");
+        if (vendidosPrevios == null)
+        {
+            vendidosPrevios = new ArrayList<>();
+        }
+        vendidosPrevios.addAll(boletosVendidos);
+        ManipulacionArchivos.guarda(null, vendidosPrevios, "boletosVendidos.dat");
     }//GEN-LAST:event_aceptarActionPerformed
 
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_cancelarActionPerformed
@@ -241,7 +314,6 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 JButton btn = new JButton();
 
                 String categoria = (fila < 3) ? "General" : (fila < 6) ? "Preferencial" : "VIP";
-
                 Color color = switch (categoria)
                 {
                     case "VIP" ->
@@ -269,28 +341,49 @@ public class VtnAsientos extends javax.swing.JInternalFrame
                 double precio = precios.get(categoria);
                 Boleto boleto = new Boleto(id, categoria, precio, id);
                 nboleto.agregarBoleto(boleto);
+                mapaBoletos.put(btn, boleto);
 
                 btn.setToolTipText("Asiento " + id + " | " + categoria + " $" + precio);
 
                 btn.addActionListener(evt ->
                 {
-                    if (btn.getBackground() != Color.RED)
+                    if (btn.getBackground().equals(Color.RED))
                     {
-                        if (btn.getBackground() == Color.GREEN)
-                        {
-                            btn.setBackground(color);
-                            asientosSeleccionados.remove(btn);
-                        } else
-                        {
-                            btn.setBackground(Color.GREEN);
-                            asientosSeleccionados.add(btn);
-                        }
-                        actualizarCamposDeResumen();
+                        return;
                     }
+
+                    if (btn.getBackground().equals(Color.GREEN))
+                    {
+                        btn.setBackground(color);
+                        asientosSeleccionados.remove(btn);
+                    } else
+                    {
+                        btn.setBackground(Color.GREEN);
+                        asientosSeleccionados.add(btn);
+                    }
+                    actualizarCamposDeResumen();
                 });
 
-                mapaBoletos.put(btn, boleto);
                 panelAsientos.add(btn, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, ancho, alto));
+            }
+        }
+
+        List<Boleto> boletosVendidos = (List<Boleto>) ManipulacionArchivos.carga(null, "boletosVendidos.dat");
+
+        if (boletosVendidos != null)
+        {
+            for (Boleto vendido : boletosVendidos)
+            {
+                for (Map.Entry<JButton, Boleto> entry : mapaBoletos.entrySet())
+                {
+                    if (vendido.getId().equals(entry.getValue().getId()))
+                    {
+                        entry.getKey().setBackground(Color.RED);
+                        //entry.getKey().setEnabled(false);
+                        entry.getValue().marcarComoVendido();
+                        break;
+                    }
+                }
             }
         }
 
@@ -324,8 +417,10 @@ public class VtnAsientos extends javax.swing.JInternalFrame
     private javax.swing.JButton aceptar;
     private javax.swing.JTextField asientosJT;
     private javax.swing.JButton cancelar;
+    private javax.swing.JTextField correoJT;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel panelAsientos;
     private javax.swing.JTextField totalJT;
     // End of variables declaration//GEN-END:variables

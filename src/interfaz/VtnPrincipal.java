@@ -85,6 +85,7 @@ public class VtnPrincipal extends javax.swing.JFrame
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -128,9 +129,19 @@ public class VtnPrincipal extends javax.swing.JFrame
         jMenuBar1.add(jMenu1);
 
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/estadio.png"))); // NOI18N
-        jMenu2.setText("Estadio");
+        jMenu2.setText("Ubicacion Estadio");
         jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jMenu2MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Login");
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -148,9 +159,16 @@ public class VtnPrincipal extends javax.swing.JFrame
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu1MouseClicked
     {//GEN-HEADEREND:event_jMenu1MouseClicked
         panelControl.removeAll();
-         VtnAsientos asientos = new VtnAsientos(nboleto);
+        VtnAsientos asientos = new VtnAsientos(nboleto);
         panelControl.add(asientos).setVisible(true);
     }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu2MouseClicked
+    {//GEN-HEADEREND:event_jMenu2MouseClicked
+        panelControl.removeAll();
+        VtnMapaEstadio mapa = new VtnMapaEstadio();
+        panelControl.add(mapa).setVisible(true);
+    }//GEN-LAST:event_jMenu2MouseClicked
 
     private void deseleccionarTodo()
     {
@@ -231,6 +249,7 @@ public class VtnPrincipal extends javax.swing.JFrame
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JDesktopPane panelControl;
