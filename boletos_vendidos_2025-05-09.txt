@@ -1,0 +1,6 @@
+Boletos Vendidos - Fecha: 2025-05-09T16:44:24.712365
+--------------------------------------------------------
+ID: F0_C0, Categoría: General, Precio: $100.0, Asiento: F0_C0
+ID: F9_C0, Categoría: VIP, Precio: $300.0, Asiento: F9_C0
+ID: F0_C44, Categoría: General, Precio: $100.0, Asiento: F0_C44
+ID: F9_C44, Categoría: VIP, Precio: $300.0, Asiento: F9_C44
