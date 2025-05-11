@@ -38,7 +38,7 @@ public class VtnAsientos extends javax.swing.JInternalFrame
     private final int filas = 10;
     private final int columnas = 45;
     private final Map<JButton, Boleto> mapaBoletos = new HashMap<>();
-    private final Map<String, Double> precios = new HashMap<>();
+    public static Map<String, Double> precios = new HashMap<>();
 
     private ColaBoletos colaBoletos = new ColaBoletos();
 
@@ -54,6 +54,14 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         cargarPrecios();
+        Object datos = ManipulacionArchivos.carga(null, "precios.dat");
+        if (datos instanceof Map<?, ?> datosMap)
+        {
+            precios.putAll((Map<String, Double>) datosMap);
+        } else
+        {
+            cargarPrecios(); 
+        }
         generarAsientosConPosicion();
     }
 
@@ -85,6 +93,31 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         correoJT = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener()
+        {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt)
+            {
+                formInternalFrameOpened(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelAsientos.setBackground(new java.awt.Color(255, 255, 255));
@@ -229,8 +262,9 @@ public class VtnAsientos extends javax.swing.JInternalFrame
 
         generarArchivoBoletosVendidos();
         listaOrdenada.generarReporteTXT();
+        VtnAdministrador.actualizarGraficas();
 
-        CtrlInterfaz.limpia(asientosJT, totalJT,correoJT);
+        CtrlInterfaz.limpia(asientosJT, totalJT, correoJT);
         asientosSeleccionados.clear();
 
         List<Boleto> vendidosPrevios = (List<Boleto>) ManipulacionArchivos.carga(null, "boletosVendidos.dat");
@@ -247,6 +281,11 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         deseleccionarTodo();
         CtrlInterfaz.limpia(asientosJT, totalJT);
     }//GEN-LAST:event_cancelarActionPerformed
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt)//GEN-FIRST:event_formInternalFrameOpened
+    {//GEN-HEADEREND:event_formInternalFrameOpened
+        
+    }//GEN-LAST:event_formInternalFrameOpened
 
     private void generarArchivoBoletosVendidos()
     {

@@ -5,8 +5,11 @@
 package interfaz;
 
 import java.awt.Color;
+import java.awt.Image;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import modelo.Boleto;
@@ -19,9 +22,8 @@ import modelo.*;
 public class VtnPrincipal extends javax.swing.JFrame
 {
 
-    //Lista boletos
     private ListarBoletos nboleto = new ListarBoletos();
-    
+
     private java.util.List<JButton> asientosSeleccionados = new java.util.ArrayList<>();
     private JButton[][] asientos = new JButton[10][12];
     private boolean[][] ocupados = new boolean[10][12];
@@ -37,27 +39,27 @@ public class VtnPrincipal extends javax.swing.JFrame
     public VtnPrincipal()
     {
         initComponents();
-        cargarPrecios();
+        //cargarPrecios();
         cargarCategorias();
         //generarAsientosConPosicion();
     }
+//
+//    private void cargarPrecios()
+//    {
+//        precios.put("VIP", 300.0);
+//        precios.put("Preferencial", 200.0);
+//        precios.put("General", 100.0);
+//    }
 
-    private void cargarPrecios()
+    private void cargarCategorias()
     {
-        precios.put("VIP", 300.0);
-        precios.put("Preferencial", 200.0);
-        precios.put("General", 100.0);
-    }
-
-    
-    private void cargarCategorias(){
         NodoCateg cat = new NodoCateg("VIP");
         System.out.println("Se creó categoría: " + cat.getCategoria());
         NodoCateg cat1 = new NodoCateg("Preferencial");
         System.out.println("Se creó categoría: " + cat1.getCategoria());
         NodoCateg cat2 = new NodoCateg("General");
         System.out.println("Se creó categoría: " + cat2.getCategoria());
-        
+
         nboleto.agregarCategoria(cat);
         nboleto.agregarCategoria(cat1);
         nboleto.agregarCategoria(cat2);
@@ -65,7 +67,7 @@ public class VtnPrincipal extends javax.swing.JFrame
         operaciones.mostrarCategoria("VIP");
         operaciones.mostrarCategoria("Preferencial");
         operaciones.mostrarCategoria("General");
-       */
+         */
     }
 
     /**
@@ -83,9 +85,10 @@ public class VtnPrincipal extends javax.swing.JFrame
         jLabel2 = new javax.swing.JLabel();
         panelControl = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu3 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -116,6 +119,18 @@ public class VtnPrincipal extends javax.swing.JFrame
 
         jMenuBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+        jMenu3.setText("Inicio");
+        jMenu3.setToolTipText("");
+        jMenu3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu3);
+
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boleto.png"))); // NOI18N
         jMenu1.setText("Boletos");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -140,8 +155,16 @@ public class VtnPrincipal extends javax.swing.JFrame
         });
         jMenuBar1.add(jMenu2);
 
-        jMenu3.setText("Login");
-        jMenuBar1.add(jMenu3);
+        jMenu4.setText("Administrador");
+        jMenu4.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        jMenu4.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jMenu4MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu4);
 
         setJMenuBar(jMenuBar1);
 
@@ -170,6 +193,20 @@ public class VtnPrincipal extends javax.swing.JFrame
         panelControl.add(mapa).setVisible(true);
     }//GEN-LAST:event_jMenu2MouseClicked
 
+    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu4MouseClicked
+    {//GEN-HEADEREND:event_jMenu4MouseClicked
+        panelControl.removeAll();
+        VtnAdministrador admin = new VtnAdministrador();
+        panelControl.add(admin).setVisible(true);
+    }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu3MouseClicked
+    {//GEN-HEADEREND:event_jMenu3MouseClicked
+        panelControl.removeAll();
+        VtnInicio inicio = new VtnInicio();
+        panelControl.add(inicio).setVisible(true);
+    }//GEN-LAST:event_jMenu3MouseClicked
+
     private void deseleccionarTodo()
     {
         for (JButton btn : asientosSeleccionados)
@@ -189,8 +226,6 @@ public class VtnPrincipal extends javax.swing.JFrame
         }
         asientosSeleccionados.clear();
     }
-
-
 
     /**
      * @param args the command line arguments
@@ -250,6 +285,7 @@ public class VtnPrincipal extends javax.swing.JFrame
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JDesktopPane panelControl;

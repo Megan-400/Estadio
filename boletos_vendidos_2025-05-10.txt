@@ -1,0 +1,4 @@
+Boletos Vendidos - Fecha: 2025-05-10T18:45:58.327743500
+--------------------------------------------------------
+ID: F9_C19, Categoría: VIP, Precio: $300.0, Asiento: F9_C19
+ID: F9_C20, Categoría: VIP, Precio: $300.0, Asiento: F9_C20

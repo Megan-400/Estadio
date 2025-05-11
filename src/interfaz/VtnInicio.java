@@ -4,12 +4,23 @@
  */
 package interfaz;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.File;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  *
  * @author chemo
  */
 public class VtnInicio extends javax.swing.JInternalFrame
 {
+
+    private Image flyerImage;
 
     /**
      * Creates new form VtnInicio
@@ -19,6 +30,29 @@ public class VtnInicio extends javax.swing.JInternalFrame
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+
+        panelImagen.setOpaque(false);
+        panelImagen.setLayout(null);
+
+// Asumiendo que estás en una clase como VtnInicio que tiene el panelImagen
+//        panelImagen = new JPanel()
+//        {
+//            @Override
+//            protected void paintComponent(Graphics g)
+//            {
+//                super.paintComponent(g);
+//                if (flyerImage != null)
+//                {
+//                    g.drawImage(flyerImage, 0, 0, getWidth(), getHeight(), this);
+//                } else
+//                {
+//                    g.setColor(Color.LIGHT_GRAY);
+//                    g.drawString("Sin imagen disponible", 10, 20);
+//                }
+//            }
+//        };
+// Y lo vuelves a agregar al layout si es necesario
+        //this.add(panelImagen);
     }
 
     /**
@@ -35,15 +69,41 @@ public class VtnInicio extends javax.swing.JInternalFrame
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        panelImagen = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener()
+        {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt)
+            {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt)
+            {
+                formInternalFrameOpened(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -55,9 +115,6 @@ public class VtnInicio extends javax.swing.JInternalFrame
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Estadio_Video.gif"))); // NOI18N
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 60, 680, -1));
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 180, -1, -1));
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/partido.jpg"))); // NOI18N
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 140, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -84,12 +141,54 @@ public class VtnInicio extends javax.swing.JInternalFrame
         jLabel8.setText("¡Gracias por formar parte de esta experiencia!");
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 110, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 1300, 500));
+        javax.swing.GroupLayout panelImagenLayout = new javax.swing.GroupLayout(panelImagen);
+        panelImagen.setLayout(panelImagenLayout);
+        panelImagenLayout.setHorizontalGroup(
+            panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelImagenLayout.createSequentialGroup()
+                .addContainerGap(313, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(267, 267, 267))
+        );
+        panelImagenLayout.setVerticalGroup(
+            panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelImagenLayout.createSequentialGroup()
+                .addGap(153, 153, 153)
+                .addComponent(jLabel3)
+                .addContainerGap(177, Short.MAX_VALUE))
+        );
+
+        jPanel2.add(panelImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 140, 580, 330));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 20, 1310, 500));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt)//GEN-FIRST:event_formInternalFrameOpened
+    {//GEN-HEADEREND:event_formInternalFrameOpened
+        File archivo = new File("Datos/flyer.png");
+        if (archivo.exists())
+        {
+            ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+
+            // Escalar la imagen al tamaño del panel
+            Image imagen = icono.getImage().getScaledInstance(panelImagen.getWidth(), panelImagen.getHeight(), Image.SCALE_SMOOTH);
+
+            // Crear un JLabel con la imagen escalada
+            JLabel label = new JLabel(new ImageIcon(imagen));
+            label.setSize(panelImagen.getSize());
+
+            // Usar un BorderLayout para asegurar que se expanda bien
+            panelImagen.removeAll();
+            panelImagen.setLayout(new BorderLayout());
+            panelImagen.add(label, BorderLayout.CENTER);
+            panelImagen.revalidate();
+            panelImagen.repaint();
+        }
+    }//GEN-LAST:event_formInternalFrameOpened
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -103,5 +202,6 @@ public class VtnInicio extends javax.swing.JInternalFrame
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel panelImagen;
     // End of variables declaration//GEN-END:variables
 }

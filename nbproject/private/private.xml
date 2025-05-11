@@ -3,8 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnAsientos.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/estructuras/ListaDobleOrdenada.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/modelo/NodoCateg.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/correo/EmailSender.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/mapa/EstadioWaypoint.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/mapa/EstadioWaypointRenderer.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/modelo/NodoBoleto.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnMapaEstadio.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/modelo/Boleto.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnPrincipal.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/modelo/ListarBoletos.java</file>
         </group>
     </open-files>
