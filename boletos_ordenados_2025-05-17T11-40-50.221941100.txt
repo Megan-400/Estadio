@@ -1,0 +1,5 @@
+Boletos vendidos ordenados por prioridad:
+-------------------------------------------------
+ID: F2_C10 | General | $100.0
+ID: F2_C11 | General | $100.0
+ID: F1_C11 | General | $100.0

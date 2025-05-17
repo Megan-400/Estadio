@@ -1,0 +1,5 @@
+Boletos Vendidos - Fecha: 2025-05-15T19:29:30.864645
+--------------------------------------------------------
+ID: F5_C23, Categoría: Preferencial, Precio: $200.0, Asiento: F5_C23
+ID: F6_C23, Categoría: VIP, Precio: $300.0, Asiento: F6_C23
+ID: F7_C23, Categoría: VIP, Precio: $300.0, Asiento: F7_C23

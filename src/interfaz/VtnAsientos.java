@@ -4,6 +4,7 @@
  */
 package interfaz;
 
+import estructuras.ListarBoletos;
 import archivos.ManipulacionArchivos;
 import cjb.ci.CtrlInterfaz;
 import correo.EmailSender;
@@ -41,6 +42,7 @@ public class VtnAsientos extends javax.swing.JInternalFrame
     public static Map<String, Double> precios = new HashMap<>();
 
     private ColaBoletos colaBoletos = new ColaBoletos();
+    public static VtnAsientos instanciaActiva;
 
     /**
      * Creates new form VtnAsientos
@@ -60,9 +62,11 @@ public class VtnAsientos extends javax.swing.JInternalFrame
             precios.putAll((Map<String, Double>) datosMap);
         } else
         {
-            cargarPrecios(); 
+            cargarPrecios();
         }
         generarAsientosConPosicion();
+        correoJT.setText(VtnPrincipal.correoSesion);
+        instanciaActiva = this;
     }
 
     private void cargarPrecios()
@@ -274,6 +278,23 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         }
         vendidosPrevios.addAll(boletosVendidos);
         ManipulacionArchivos.guarda(null, vendidosPrevios, "boletosVendidos.dat");
+
+        Map<String, List<Boleto>> historial = (Map<String, List<Boleto>>) ManipulacionArchivos.carga(null, "comprasUsuarios.dat");
+
+        if (historial == null)
+        {
+            historial = new HashMap<>();
+        }
+
+        String correoUsuario = VtnPrincipal.correoSesion;
+
+        if (correoUsuario != null)
+        {
+            List<Boleto> compras = historial.getOrDefault(correoUsuario, new ArrayList<>());
+            compras.addAll(boletosVendidos);
+            historial.put(correoUsuario, compras);
+            ManipulacionArchivos.guarda(null, historial, "comprasUsuarios.dat");
+        }
     }//GEN-LAST:event_aceptarActionPerformed
 
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_cancelarActionPerformed
@@ -284,7 +305,7 @@ public class VtnAsientos extends javax.swing.JInternalFrame
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt)//GEN-FIRST:event_formInternalFrameOpened
     {//GEN-HEADEREND:event_formInternalFrameOpened
-        
+
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void generarArchivoBoletosVendidos()
@@ -450,6 +471,8 @@ public class VtnAsientos extends javax.swing.JInternalFrame
         asientosJT.setText(listaAsientos.toString());
         totalJT.setText("$" + total);
     }
+
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

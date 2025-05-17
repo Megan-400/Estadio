@@ -1,7 +1,6 @@
 package estructuras;
 
 import modelo.Boleto;
-import modelo.NodoDoble;
 
 public class ListaDobleOrdenada
 {

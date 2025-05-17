@@ -4,6 +4,8 @@
  */
 package interfaz;
 
+import estructuras.ListarBoletos;
+import estructuras.NodoCateg;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
@@ -33,6 +35,8 @@ public class VtnPrincipal extends javax.swing.JFrame
     private final Map<JButton, Boleto> mapaBoletos = new HashMap<>();
     private final Map<String, Double> precios = new HashMap<>();
 
+    public static String correoSesion;
+
     /**
      * Creates new form VtnAsientos
      */
@@ -42,6 +46,31 @@ public class VtnPrincipal extends javax.swing.JFrame
         //cargarPrecios();
         cargarCategorias();
         //generarAsientosConPosicion();
+        menuInicio.setVisible(true);
+        menuUbicacion.setVisible(true);
+        menuSesion.setVisible(true);
+
+        // Ocultar los demás
+        menuBoletos.setVisible(false);
+        menuMisCompras.setVisible(false);
+        menuAdmin.setVisible(false);
+
+        if (correoSesion != null)
+        {
+            System.out.println("Sesión activa de: " + correoSesion);
+
+            menuBoletos.setVisible(true);
+            menuMisCompras.setVisible(true);
+            menuAdmin.setVisible(false); // cambia si es admin
+
+            menuSesion.setText("Cerrar Sesión");
+        }
+
+        if ("admin".equalsIgnoreCase(correoSesion))
+        {
+            menuAdmin.setVisible(true);
+        }
+
     }
 //
 //    private void cargarPrecios()
@@ -85,10 +114,12 @@ public class VtnPrincipal extends javax.swing.JFrame
         jLabel2 = new javax.swing.JLabel();
         panelControl = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
+        menuInicio = new javax.swing.JMenu();
+        menuBoletos = new javax.swing.JMenu();
+        menuUbicacion = new javax.swing.JMenu();
+        menuMisCompras = new javax.swing.JMenu();
+        menuAdmin = new javax.swing.JMenu();
+        menuSesion = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -112,59 +143,84 @@ public class VtnPrincipal extends javax.swing.JFrame
         jLabel2.setText("Estadio Universitario Alberto \"Chivo\" Córdoba");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, -1));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 110));
 
         panelControl.setBackground(new java.awt.Color(255, 255, 255));
         getContentPane().add(panelControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1300, 560));
 
         jMenuBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jMenu3.setText("Inicio");
-        jMenu3.setToolTipText("");
-        jMenu3.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter()
+        menuInicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pagina-de-inicio.png"))); // NOI18N
+        menuInicio.setText("Inicio");
+        menuInicio.setToolTipText("");
+        menuInicio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuInicio.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
             {
-                jMenu3MouseClicked(evt);
+                menuInicioMouseClicked(evt);
             }
         });
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(menuInicio);
 
-        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boleto.png"))); // NOI18N
-        jMenu1.setText("Boletos");
-        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jMenu1.addMouseListener(new java.awt.event.MouseAdapter()
+        menuBoletos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boleto.png"))); // NOI18N
+        menuBoletos.setText("Boletos");
+        menuBoletos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuBoletos.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
             {
-                jMenu1MouseClicked(evt);
+                menuBoletosMouseClicked(evt);
             }
         });
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(menuBoletos);
 
-        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/estadio.png"))); // NOI18N
-        jMenu2.setText("Ubicacion Estadio");
-        jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jMenu2.addMouseListener(new java.awt.event.MouseAdapter()
+        menuUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/estadio.png"))); // NOI18N
+        menuUbicacion.setText("Ubicacion Estadio");
+        menuUbicacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuUbicacion.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
             {
-                jMenu2MouseClicked(evt);
+                menuUbicacionMouseClicked(evt);
             }
         });
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(menuUbicacion);
 
-        jMenu4.setText("Administrador");
-        jMenu4.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jMenu4.addMouseListener(new java.awt.event.MouseAdapter()
+        menuMisCompras.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/carrito-de-supermercado.png"))); // NOI18N
+        menuMisCompras.setText("Mis Compras");
+        menuMisCompras.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mouseClicked(java.awt.event.MouseEvent evt)
             {
-                jMenu4MouseClicked(evt);
+                menuMisComprasMouseClicked(evt);
             }
         });
-        jMenuBar1.add(jMenu4);
+        jMenuBar1.add(menuMisCompras);
+
+        menuAdmin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/panel-de-administrador.png"))); // NOI18N
+        menuAdmin.setText("Administrador");
+        menuAdmin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuAdmin.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                menuAdminMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuAdmin);
+
+        menuSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/perfil-del-usuario.png"))); // NOI18N
+        menuSesion.setText("Iniciar Sesion");
+        menuSesion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuSesion.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                menuSesionMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuSesion);
 
         setJMenuBar(jMenuBar1);
 
@@ -179,33 +235,46 @@ public class VtnPrincipal extends javax.swing.JFrame
         panelControl.add(inicio).setVisible(true);
     }//GEN-LAST:event_formWindowOpened
 
-    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu1MouseClicked
-    {//GEN-HEADEREND:event_jMenu1MouseClicked
+    private void menuBoletosMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuBoletosMouseClicked
+    {//GEN-HEADEREND:event_menuBoletosMouseClicked
         panelControl.removeAll();
         VtnAsientos asientos = new VtnAsientos(nboleto);
         panelControl.add(asientos).setVisible(true);
-    }//GEN-LAST:event_jMenu1MouseClicked
+    }//GEN-LAST:event_menuBoletosMouseClicked
 
-    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu2MouseClicked
-    {//GEN-HEADEREND:event_jMenu2MouseClicked
+    private void menuUbicacionMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuUbicacionMouseClicked
+    {//GEN-HEADEREND:event_menuUbicacionMouseClicked
         panelControl.removeAll();
         VtnMapaEstadio mapa = new VtnMapaEstadio();
         panelControl.add(mapa).setVisible(true);
-    }//GEN-LAST:event_jMenu2MouseClicked
+    }//GEN-LAST:event_menuUbicacionMouseClicked
 
-    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu4MouseClicked
-    {//GEN-HEADEREND:event_jMenu4MouseClicked
+    private void menuAdminMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuAdminMouseClicked
+    {//GEN-HEADEREND:event_menuAdminMouseClicked
         panelControl.removeAll();
         VtnAdministrador admin = new VtnAdministrador();
         panelControl.add(admin).setVisible(true);
-    }//GEN-LAST:event_jMenu4MouseClicked
+    }//GEN-LAST:event_menuAdminMouseClicked
 
-    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jMenu3MouseClicked
-    {//GEN-HEADEREND:event_jMenu3MouseClicked
+    private void menuInicioMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuInicioMouseClicked
+    {//GEN-HEADEREND:event_menuInicioMouseClicked
         panelControl.removeAll();
         VtnInicio inicio = new VtnInicio();
         panelControl.add(inicio).setVisible(true);
-    }//GEN-LAST:event_jMenu3MouseClicked
+    }//GEN-LAST:event_menuInicioMouseClicked
+
+    private void menuSesionMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuSesionMouseClicked
+    {//GEN-HEADEREND:event_menuSesionMouseClicked
+        dispose();
+        new VtnLogin().setVisible(true);
+    }//GEN-LAST:event_menuSesionMouseClicked
+
+    private void menuMisComprasMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuMisComprasMouseClicked
+    {//GEN-HEADEREND:event_menuMisComprasMouseClicked
+        panelControl.removeAll();
+        VtnMostrarCompras compras = new VtnMostrarCompras();
+        panelControl.add(compras).setVisible(true);
+    }//GEN-LAST:event_menuMisComprasMouseClicked
 
     private void deseleccionarTodo()
     {
@@ -245,20 +314,28 @@ public class VtnPrincipal extends javax.swing.JFrame
                 {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex)
         {
-            java.util.logging.Logger.getLogger(VtnPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VtnPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex)
         {
-            java.util.logging.Logger.getLogger(VtnPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VtnPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex)
         {
-            java.util.logging.Logger.getLogger(VtnPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VtnPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex)
         {
-            java.util.logging.Logger.getLogger(VtnPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VtnPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -282,12 +359,14 @@ public class VtnPrincipal extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    public javax.swing.JMenu menuAdmin;
+    private javax.swing.JMenu menuBoletos;
+    private javax.swing.JMenu menuInicio;
+    private javax.swing.JMenu menuMisCompras;
+    private javax.swing.JMenu menuSesion;
+    private javax.swing.JMenu menuUbicacion;
     private javax.swing.JDesktopPane panelControl;
     // End of variables declaration//GEN-END:variables
 }
