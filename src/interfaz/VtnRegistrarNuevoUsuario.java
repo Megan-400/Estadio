@@ -7,7 +7,9 @@ package interfaz;
 import archivos.ManipulacionArchivos;
 import cjb.ci.CtrlInterfaz;
 import correo.EmailSender;
+import java.awt.Image;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
 
@@ -24,6 +26,14 @@ public class VtnRegistrarNuevoUsuario extends javax.swing.JFrame
     public VtnRegistrarNuevoUsuario()
     {
         initComponents();
+        setIconImage(getIconImage());
+    }
+    
+    public Image getIconImage()
+    {
+        ImageIcon original = new ImageIcon(getClass().getResource("/imagenes/Logo.png"));
+        Image img = original.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        return img;
     }
 
     /**
@@ -51,7 +61,8 @@ public class VtnRegistrarNuevoUsuario extends javax.swing.JFrame
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Crear Cuenta");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -138,7 +149,9 @@ public class VtnRegistrarNuevoUsuario extends javax.swing.JFrame
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
     {//GEN-HEADEREND:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        dispose();
+        new VtnLogin().setVisible(true);
+                
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void mostrarCheckBoxActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_mostrarCheckBoxActionPerformed

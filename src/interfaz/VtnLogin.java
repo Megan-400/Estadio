@@ -5,7 +5,9 @@
 package interfaz;
 
 import archivos.ManipulacionArchivos;
+import java.awt.Image;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
 
@@ -25,6 +27,14 @@ public class VtnLogin extends javax.swing.JFrame
     public VtnLogin()
     {
         initComponents();
+        setIconImage(getIconImage());
+    }
+
+    public Image getIconImage()
+    {
+        ImageIcon original = new ImageIcon(getClass().getResource("/imagenes/Logo.png"));
+        Image img = original.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        return img;
     }
 
     /**
@@ -50,6 +60,7 @@ public class VtnLogin extends javax.swing.JFrame
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Iniciar Sesion");
         addWindowListener(new java.awt.event.WindowAdapter()
         {
             public void windowOpened(java.awt.event.WindowEvent evt)
@@ -147,7 +158,9 @@ public class VtnLogin extends javax.swing.JFrame
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
     {//GEN-HEADEREND:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        dispose();        
+        VtnPrincipal vtn = new VtnPrincipal();
+        vtn.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton3ActionPerformed

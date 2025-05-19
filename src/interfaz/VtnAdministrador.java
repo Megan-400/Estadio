@@ -7,9 +7,9 @@ package interfaz;
 import archivos.ManipulacionArchivos;
 import cjb.ci.CtrlInterfaz;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +31,18 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import org.jfree.chart.ChartUtils;
 
 /**
  *
@@ -40,6 +52,8 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
 {
 
     private static VtnAdministrador instancia;
+    private JFreeChart graficoIngresos;
+    private JFreeChart graficoBoletos;
 
     /**
      * Creates new form VtnAdministrador
@@ -63,6 +77,12 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
     {
 
         jPanel1 = new javax.swing.JPanel();
+        jButton3 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        labelVistaPrevia = new javax.swing.JLabel();
+        panelEstadisticas = new javax.swing.JPanel();
+        panelIngresos = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         precioGeneral = new javax.swing.JTextField();
@@ -72,13 +92,12 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
         precioVIP = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        labelVistaPrevia = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
-        panelEstadisticas = new javax.swing.JPanel();
-        panelIngresos = new javax.swing.JPanel();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        panelResumen = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener()
@@ -111,42 +130,10 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setText("Precios Boletos:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
-
-        jLabel2.setText("General:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
-        jPanel1.add(precioGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 100, -1));
-
-        jLabel3.setText("Preferencial:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
-        jPanel1.add(precioPreferencial, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 100, -1));
-
-        jLabel4.setText("VIP:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
-        jPanel1.add(precioVIP, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 100, -1));
-
-        jButton1.setText("ACEPTAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
-
-        jButton2.setText("LIMPIAR");
-        jButton2.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 220, -1, -1));
-
+        jButton3.setBackground(new java.awt.Color(51, 153, 0));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/imagen.png"))); // NOI18N
         jButton3.setText("IMAGEN");
         jButton3.addActionListener(new java.awt.event.ActionListener()
         {
@@ -155,7 +142,11 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 520, -1, -1));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 520, 350, -1));
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelVistaPrevia.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -170,19 +161,7 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 350, 250));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("Reiniciar evento:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 30, -1, -1));
-
-        jButton4.setText("ACEPTAR");
-        jButton4.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jButton4ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 100, -1));
+        panelEstadisticas.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelEstadisticasLayout = new javax.swing.GroupLayout(panelEstadisticas);
         panelEstadisticas.setLayout(panelEstadisticasLayout);
@@ -197,6 +176,8 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
 
         jPanel1.add(panelEstadisticas, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 0, 540, 280));
 
+        panelIngresos.setBackground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout panelIngresosLayout = new javax.swing.GroupLayout(panelIngresos);
         panelIngresos.setLayout(panelIngresosLayout);
         panelIngresosLayout.setHorizontalGroup(
@@ -209,6 +190,118 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
         );
 
         jPanel1.add(panelIngresos, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 280, 540, 280));
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setText("Precios De Boletos");
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("General:");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, -1));
+        jPanel3.add(precioGeneral, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 100, -1));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Preferencial:");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
+        jPanel3.add(precioPreferencial, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 100, -1));
+
+        jLabel4.setText("VIP:");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, -1, -1));
+        jPanel3.add(precioVIP, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 100, -1));
+
+        jButton1.setBackground(new java.awt.Color(51, 204, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("ACEPTAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 100, -1));
+
+        jButton2.setBackground(new java.awt.Color(255, 0, 0));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("LIMPIAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, 100, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 250, 190));
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel8.setText("Generar Reportes");
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
+
+        jButton4.setBackground(new java.awt.Color(51, 153, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("Reiniciar Evento");
+        jButton4.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 230, -1));
+
+        jButton5.setBackground(new java.awt.Color(51, 153, 0));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("Generar Reporte PDF");
+        jButton5.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 230, -1));
+
+        jButton6.setBackground(new java.awt.Color(51, 153, 0));
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("Importar Graficas");
+        jButton6.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 230, -1));
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 40, 250, 190));
+
+        panelResumen.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout panelResumenLayout = new javax.swing.GroupLayout(panelResumen);
+        panelResumen.setLayout(panelResumenLayout);
+        panelResumenLayout.setHorizontalGroup(
+            panelResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 350, Short.MAX_VALUE)
+        );
+        panelResumenLayout.setVerticalGroup(
+            panelResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 270, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(panelResumen, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 260, 350, 270));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1300, 560));
 
@@ -241,6 +334,7 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
         }
         mostrarEstadisticasBoletos(panelEstadisticas);
         mostrarGraficaIngresos();
+        actualizarPanelResumenConEstilo(panelResumen);
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
@@ -307,6 +401,12 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
                 dat.delete();
             }
 
+            File compras = new File("Datos/comprasUsuarios.dat");
+            if (compras.exists())
+            {
+                compras.delete();
+            }
+
             Map<String, Double> preciosDefault = new HashMap<>();
             preciosDefault.put("VIP", 300.0);
             preciosDefault.put("Preferencial", 200.0);
@@ -322,6 +422,230 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
             JOptionPane.showMessageDialog(this, "Operación cancelada.");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton5ActionPerformed
+    {//GEN-HEADEREND:event_jButton5ActionPerformed
+        generarReportePDFDesdeGraficas();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton6ActionPerformed
+    {//GEN-HEADEREND:event_jButton6ActionPerformed
+        exportarGraficasCombinadas("reporte_graficas.png");
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    public void actualizarPanelResumenConEstilo(JPanel panel)
+    {
+        panel.removeAll();
+
+        List<Boleto> boletos = (List<Boleto>) ManipulacionArchivos.carga(null, "boletosVendidos.dat");
+
+        int totalBoletos = 0;
+        double montoTotal = 0.0;
+        String haceTiempo = "hace 2 min";
+
+        if (boletos != null && !boletos.isEmpty())
+        {
+            totalBoletos = boletos.size();
+            for (Boleto b : boletos)
+            {
+                montoTotal += b.getPrecio();
+            }
+        }
+
+        panel.setLayout(new java.awt.GridLayout(3, 1, 5, 5));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createLineBorder(new Color(220, 220, 220), 2, true),
+                javax.swing.BorderFactory.createEmptyBorder(20, 30, 20, 30)
+        ));
+
+        java.awt.Font boldFont = new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 15);
+        java.awt.Font regularFont = new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14);
+
+        javax.swing.JLabel lbl1 = new javax.swing.JLabel("Total boletos vendidos: " + totalBoletos);
+        lbl1.setFont(boldFont);
+        lbl1.setForeground(Color.BLACK);
+
+        javax.swing.JLabel lbl2 = new javax.swing.JLabel("Monto recaudado: $" + String.format("%.2f", montoTotal));
+        lbl2.setFont(boldFont);
+        lbl2.setForeground(Color.BLACK);
+
+        javax.swing.JLabel lbl3 = new javax.swing.JLabel("Último boleto vendido: " + haceTiempo);
+        lbl3.setFont(regularFont);
+        lbl3.setForeground(new Color(60, 60, 60));
+
+        panel.add(lbl1);
+        panel.add(lbl2);
+        panel.add(lbl3);
+
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    public void exportarGraficasCombinadas(String nombreArchivo)
+    {
+        try
+        {
+            int width = 600;
+            int height = 400;
+
+            BufferedImage img1 = graficoBoletos.createBufferedImage(width, height);
+            BufferedImage img2 = graficoIngresos.createBufferedImage(width, height);
+
+            BufferedImage combined = new BufferedImage(width, height * 2, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = combined.createGraphics();
+
+            g.drawImage(img1, 0, 0, null);
+            g.drawImage(img2, 0, height, null);
+            g.dispose();
+
+            File outputfile = new File(nombreArchivo);
+            ImageIO.write(combined, "png", outputfile);
+
+            JOptionPane.showMessageDialog(null, "Gráficas combinadas exportadas como imagen.");
+        } catch (IOException e)
+        {
+            JOptionPane.showMessageDialog(null, "Error al exportar la imagen combinada.");
+            e.printStackTrace();
+        }
+    }
+
+    public void guardarGraficoComoImagen(JFreeChart chart, String nombreArchivo)
+    {
+        try
+        {
+            ChartUtils.saveChartAsPNG(new File(nombreArchivo), chart, 600, 400);
+            JOptionPane.showMessageDialog(null, "Gráfica guardada como imagen correctamente.");
+        } catch (IOException e)
+        {
+            JOptionPane.showMessageDialog(null, "Error al guardar la imagen.");
+        }
+    }
+
+    public void guardarAmbasGraficasComoImagen()
+    {
+        try
+        {
+            ChartUtils.saveChartAsPNG(new File("grafica_boletos.png"), graficoBoletos, 600, 400);
+            ChartUtils.saveChartAsPNG(new File("grafica_ingresos.png"), graficoIngresos, 600, 400);
+            JOptionPane.showMessageDialog(this, "Gráficas exportadas correctamente.");
+        } catch (IOException e)
+        {
+            JOptionPane.showMessageDialog(this, "Error al guardar las gráficas.");
+            e.printStackTrace();
+        }
+    }
+
+    public void exportarReportePDF(int vip, int preferencial, int general, double totalVIP, double totalPref, double totalGen)
+    {
+        try
+        {
+            Document documento = new Document();
+            PdfWriter.getInstance(documento, new FileOutputStream("reporte_estadisticas.pdf"));
+            documento.open();
+
+            Font titulo = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
+            Font subtitulo = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            Font normal = new Font(Font.FontFamily.HELVETICA, 12);
+            Font negrita = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+
+            try
+            {
+                com.itextpdf.text.Image logo = com.itextpdf.text.Image.getInstance(getClass().getResource("/imagenes/UAEMEX.png"));
+                logo.scaleToFit(150, 150);
+                logo.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+                documento.add(logo);
+            } catch (Exception e)
+            {
+                System.out.println("No se pudo cargar el logo: " + e.getMessage());
+            }
+
+            documento.add(new Paragraph("REPORTE DE VENTAS", titulo));
+            documento.add(new Paragraph("Estadio Universitario Alberto \"Chivo\" Córdoba", normal));
+            documento.add(new Paragraph(" "));
+
+            documento.add(new Paragraph("Resumen de Boletos Vendidos", subtitulo));
+            documento.add(new Paragraph("-----------------------------------------------"));
+            documento.add(new Paragraph("Categoría: VIP", negrita));
+            documento.add(new Paragraph("Cantidad: " + vip, normal));
+            documento.add(new Paragraph(" "));
+            documento.add(new Paragraph("Categoría: Preferencial", negrita));
+            documento.add(new Paragraph("Cantidad: " + preferencial, normal));
+            documento.add(new Paragraph(" "));
+            documento.add(new Paragraph("Categoría: General", negrita));
+            documento.add(new Paragraph("Cantidad: " + general, normal));
+            documento.add(new Paragraph(" "));
+
+            documento.add(new Paragraph("Ingresos por Categoría", subtitulo));
+            documento.add(new Paragraph("-----------------------------------------------"));
+            documento.add(new Paragraph("VIP: $" + totalVIP, normal));
+            documento.add(new Paragraph("Preferencial: $" + totalPref, normal));
+            documento.add(new Paragraph("General: $" + totalGen, normal));
+            documento.add(new Paragraph(" "));
+
+            double total = totalVIP + totalPref + totalGen;
+            documento.add(new Paragraph("==============================================="));
+            Paragraph totalFinal = new Paragraph("TOTAL RECAUDADO: $" + total, negrita);
+            totalFinal.setSpacingBefore(10f);
+            documento.add(totalFinal);
+
+            Paragraph fecha = new Paragraph("Generado el: " + java.time.LocalDateTime.now().toString(), normal);
+            fecha.setSpacingBefore(15f);
+            documento.add(fecha);
+
+            if (VtnPrincipal.correoSesion != null)
+            {
+                Paragraph usuario = new Paragraph("Generado por: " + VtnPrincipal.correoSesion, normal);
+                documento.add(usuario);
+            }
+
+            documento.close();
+            JOptionPane.showMessageDialog(null, "Reporte PDF generado correctamente.");
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF.");
+        }
+    }
+
+    public void generarReportePDFDesdeGraficas()
+    {
+        List<Boleto> boletos = (List<Boleto>) ManipulacionArchivos.carga(null, "boletosVendidos.dat");
+
+        if (boletos == null || boletos.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "No hay datos de boletos vendidos.");
+            return;
+        }
+
+        int vip = 0, preferencial = 0, general = 0;
+        double totalVIP = 0, totalPref = 0, totalGen = 0;
+
+        for (Boleto b : boletos)
+        {
+            switch (b.getCategoria())
+            {
+                case "VIP" ->
+                {
+                    vip++;
+                    totalVIP += b.getPrecio();
+                }
+                case "Preferencial" ->
+                {
+                    preferencial++;
+                    totalPref += b.getPrecio();
+                }
+                case "General" ->
+                {
+                    general++;
+                    totalGen += b.getPrecio();
+                }
+            }
+        }
+
+        exportarReportePDF(vip, preferencial, general, totalVIP, totalPref, totalGen);
+    }
 
     public static void actualizarGraficas()
     {
@@ -363,7 +687,8 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
                 dataset, PlotOrientation.VERTICAL,
                 false, true, false
         );
-        
+        graficoBoletos = chart;
+
         CategoryPlot plot = chart.getCategoryPlot();
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
         yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
@@ -408,6 +733,7 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
                 PlotOrientation.VERTICAL,
                 false, true, false
         );
+        graficoIngresos = grafica;
 
         ChartPanel panel = new ChartPanel(grafica);
         panel.setMouseWheelEnabled(true);
@@ -465,16 +791,21 @@ public class VtnAdministrador extends javax.swing.JInternalFrame
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel labelVistaPrevia;
     private javax.swing.JPanel panelEstadisticas;
     private javax.swing.JPanel panelIngresos;
+    private javax.swing.JPanel panelResumen;
     private javax.swing.JTextField precioGeneral;
     private javax.swing.JTextField precioPreferencial;
     private javax.swing.JTextField precioVIP;

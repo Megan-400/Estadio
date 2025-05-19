@@ -8,6 +8,7 @@ import estructuras.ListarBoletos;
 import estructuras.NodoCateg;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class VtnPrincipal extends javax.swing.JFrame
         menuBoletos.setVisible(false);
         menuMisCompras.setVisible(false);
         menuAdmin.setVisible(false);
+        menuCerrarSesion.setVisible(false);
 
         if (correoSesion != null)
         {
@@ -61,16 +63,24 @@ public class VtnPrincipal extends javax.swing.JFrame
 
             menuBoletos.setVisible(true);
             menuMisCompras.setVisible(true);
-            menuAdmin.setVisible(false); // cambia si es admin
-
-            menuSesion.setText("Cerrar Sesión");
+            menuAdmin.setVisible(false);
+            menuSesion.setVisible(false);
+            menuCerrarSesion.setVisible(true);
         }
 
         if ("admin".equalsIgnoreCase(correoSesion))
         {
             menuAdmin.setVisible(true);
         }
+        setIconImage(getIconImage());
 
+    }
+
+    public Image getIconImage()
+    {
+        ImageIcon original = new ImageIcon(getClass().getResource("/imagenes/Logo.png"));
+        Image img = original.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        return img;
     }
 //
 //    private void cargarPrecios()
@@ -120,8 +130,10 @@ public class VtnPrincipal extends javax.swing.JFrame
         menuMisCompras = new javax.swing.JMenu();
         menuAdmin = new javax.swing.JMenu();
         menuSesion = new javax.swing.JMenu();
+        menuCerrarSesion = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Estadio Universitario Alberto \"Chivo\" Cordoba");
         setBackground(new java.awt.Color(255, 255, 255));
         addWindowListener(new java.awt.event.WindowAdapter()
         {
@@ -222,6 +234,18 @@ public class VtnPrincipal extends javax.swing.JFrame
         });
         jMenuBar1.add(menuSesion);
 
+        menuCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salida.png"))); // NOI18N
+        menuCerrarSesion.setText("Cerrar Sesion");
+        menuCerrarSesion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        menuCerrarSesion.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                menuCerrarSesionMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuCerrarSesion);
+
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -275,6 +299,33 @@ public class VtnPrincipal extends javax.swing.JFrame
         VtnMostrarCompras compras = new VtnMostrarCompras();
         panelControl.add(compras).setVisible(true);
     }//GEN-LAST:event_menuMisComprasMouseClicked
+
+    private void menuCerrarSesionMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_menuCerrarSesionMouseClicked
+    {//GEN-HEADEREND:event_menuCerrarSesionMouseClicked
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Deseas cerrar sesión?", "Cerrar Sesión", JOptionPane.YES_NO_OPTION);
+
+        if (opcion == JOptionPane.YES_OPTION)
+        {
+            panelControl.removeAll();
+            panelControl.removeAll();
+            panelControl.revalidate();
+            panelControl.repaint();
+            VtnInicio inicio = new VtnInicio();
+            panelControl.add(inicio).setVisible(true);
+            VtnPrincipal.correoSesion = null;
+
+            menuBoletos.setVisible(false);
+            menuMisCompras.setVisible(false);
+            menuAdmin.setVisible(false);
+            menuCerrarSesion.setVisible(false);
+
+            menuSesion.setVisible(true);
+            menuSesion.setText("Iniciar Sesión");
+
+            JOptionPane.showMessageDialog(this, "Sesión cerrada correctamente.");
+        }
+    }//GEN-LAST:event_menuCerrarSesionMouseClicked
 
     private void deseleccionarTodo()
     {
@@ -362,10 +413,11 @@ public class VtnPrincipal extends javax.swing.JFrame
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     public javax.swing.JMenu menuAdmin;
-    private javax.swing.JMenu menuBoletos;
+    public javax.swing.JMenu menuBoletos;
+    public javax.swing.JMenu menuCerrarSesion;
     private javax.swing.JMenu menuInicio;
-    private javax.swing.JMenu menuMisCompras;
-    private javax.swing.JMenu menuSesion;
+    public javax.swing.JMenu menuMisCompras;
+    public javax.swing.JMenu menuSesion;
     private javax.swing.JMenu menuUbicacion;
     private javax.swing.JDesktopPane panelControl;
     // End of variables declaration//GEN-END:variables

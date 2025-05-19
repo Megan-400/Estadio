@@ -1,5 +1,0 @@
-Boletos vendidos ordenados por prioridad:
--------------------------------------------------
-ID: F6_C28 | VIP | $300.0
-ID: F7_C28 | VIP | $300.0
-ID: F8_C27 | VIP | $300.0

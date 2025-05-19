@@ -5,11 +5,11 @@
         <group>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnAsientos.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/modelo/Usuario.java</file>
-            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnRegistrarNuevoUsuario.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnAdministrador.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/archivos/ManipulacionArchivos.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/correo/EmailSender.java</file>
+            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnMostrarCompras.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnLogin.java</file>
-            <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/DialogoCodigoVerificacion.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/interfaz/VtnPrincipal.java</file>
             <file>file:/C:/Users/chemo/Documents/NetBeansProjects/ProyectoEstadio/src/modelo/Boleto.java</file>
         </group>

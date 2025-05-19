@@ -1,5 +1,0 @@
-Boletos vendidos ordenados por prioridad:
--------------------------------------------------
-ID: F6_C15 | VIP | $300.0
-ID: F7_C15 | VIP | $300.0
-ID: F5_C15 | Preferencial | $200.0

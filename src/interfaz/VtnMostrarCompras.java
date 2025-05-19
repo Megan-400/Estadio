@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
+
 package interfaz;
 
 import archivos.ManipulacionArchivos;
@@ -38,20 +35,9 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
-
-//        Map<String, List<Boleto>> historial = (Map<String, List<Boleto>>) ManipulacionArchivos.carga(null, "comprasUsuarios.dat");
-//
-//        List<Boleto> boletosUsuario = new ArrayList<>();
-//
-//        if (historial != null && VtnPrincipal.correoSesion != null)
-//        {
-//            List<Boleto> guardados = historial.get(VtnPrincipal.correoSesion);
-//            if (guardados != null)
-//            {
-//                boletosUsuario.addAll(guardados);
-//            }
-//        }
     }
+    private javax.swing.JScrollPane scrollDetalles;
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -64,6 +50,7 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
     {
 
         panelAsientosHistorial = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         panelDetalles = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -109,6 +96,9 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
 
         getContentPane().add(panelAsientosHistorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1040, 560));
 
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
         panelDetalles.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelDetallesLayout = new javax.swing.GroupLayout(panelDetalles);
@@ -122,7 +112,9 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
             .addGap(0, 560, Short.MAX_VALUE)
         );
 
-        getContentPane().add(panelDetalles, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 0, 260, 560));
+        jScrollPane1.setViewportView(panelDetalles);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 0, 260, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -162,7 +154,6 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
         double centroX = columnas / 2.0;
         double escalaBase = 0.25;
 
-        // Convertir lista de boletos a Set de IDs (asegúrate que getNumeroAsiento devuelve "F1_C5" correctamente)
         Set<String> idsComprados = boletosUsuario.stream()
                 .map(Boleto::getNumeroAsiento)
                 .collect(Collectors.toSet());
@@ -175,11 +166,9 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
             {
                 String id = "F" + fila + "_C" + col;
 
-                // Determinar categoría
                 String categoria = (fila < 3) ? "General"
                         : (fila < 6) ? "Preferencial" : "VIP";
 
-                // Colores por categoría
                 Color color = switch (categoria)
                 {
                     case "VIP" ->
@@ -290,6 +279,7 @@ public class VtnMostrarCompras extends javax.swing.JInternalFrame
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelAsientosHistorial;
     private javax.swing.JPanel panelDetalles;
     // End of variables declaration//GEN-END:variables
